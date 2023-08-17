@@ -13,6 +13,7 @@ public class Logicscript : MonoBehaviour
     public GameObject gameOverScreen;
     public int highScore = 0;
     public Text highscoreText;
+    public GameObject PressToPlay;
     [ContextMenu("Increase Score")]
     public void addScore()
     {
@@ -24,6 +25,8 @@ public class Logicscript : MonoBehaviour
     {
         PauseGame();
         highscoreText.text = $"Highscore = {PlayerPrefs.GetInt("hiScore", 0)}";
+
+
     }
     private void Update()
     {
@@ -39,35 +42,29 @@ public class Logicscript : MonoBehaviour
     void PauseGame()
     {
         Time.timeScale = 0;
+        PressToPlay.SetActive(true);
     }
 
     void ResumeGame()
     {
         Time.timeScale = 1;
+        PressToPlay.SetActive(false);
     }
 
     public void gameOver()
     {
+
+        Debug.Log(highScore);
+        if (playerScore > PlayerPrefs.GetInt("hiScore", highScore))
+        {
+            highScore = playerScore;
+            PlayerPrefs.SetInt("hiScore", highScore);
+            PlayerPrefs.Save();
+
+        }
+        Time.timeScale = 0;
         gameOverScreen.SetActive(true);
-        if (PlayerPrefs.HasKey("hiScore"))
-        {
-            if (playerScore > PlayerPrefs.GetInt("hiScore"))
-            {
-                highScore = playerScore;
-                PlayerPrefs.SetInt("hiScore", highScore);
-                PlayerPrefs.Save();
-            }
-        }
-        else
-        {
-            if (playerScore > highScore)
-            {
-                highScore = playerScore;
-                PlayerPrefs.SetInt("hiScore", highScore);
-                PlayerPrefs.Save();
-
-            }
-        }
     }
-}
 
+
+}
